@@ -1,0 +1,8 @@
+---
+controller:
+  host: ""
+  port: ""
+automationhub:
+  host:
+  port:
+database:

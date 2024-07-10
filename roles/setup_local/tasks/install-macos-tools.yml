@@ -1,10 +1,29 @@
 - name: install homebrew
   become: true
   block:
-    - name: Ensure Xcode Command Line Tools are installed
-      xcode:
-        state: present
+    - name: verify xcode installed
+      ansible.builtin.shell:
+        cmd: xcode-select -p
+      register: xcode_select_output
+      ignore_errors: yes
     
+    - name: check return code
+      ansible.builtin.debug:
+        msg: >
+          {% if xcode_select_output.rc == 0 %}
+            Xcode command line tools are installed.
+          {% else %}
+            Xcode command line tools are not installed.
+          {% endif %}
+
+    - name: Install if return code not equal to 0
+      command: softwareupdate --install -a
+      when: xcode_select_output.rc != 0
+
+    - name: Accept Xcode license agreement
+      command: xcodebuild -license accept
+      when: xcode_select_output.rc != 0
+      
     - name: Ensure Homebrew is installed
       community.general.homebrew:
         state: present

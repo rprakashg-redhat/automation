@@ -17,13 +17,15 @@
           {% endif %}
 
     - name: Install if return code not equal to 0
+      become: true
       command: softwareupdate --install -a
       when: xcode_select_output.rc != 0
 
     - name: Accept Xcode license agreement
+      become: true
       command: xcodebuild -license accept
       when: xcode_select_output.rc != 0
-      
+
     - name: Ensure Homebrew is installed
       community.general.homebrew:
         state: present

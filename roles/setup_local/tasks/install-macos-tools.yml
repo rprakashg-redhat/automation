@@ -1,0 +1,37 @@
+- name: install homebrew
+  become: true
+  block:
+    - name: Ensure Xcode Command Line Tools are installed
+      xcode:
+        state: present
+    
+    - name: Ensure Homebrew is installed
+      community.general.homebrew:
+        state: present
+
+    - name: Verify Homebrew installation
+      ansible.builtin.shell:
+        cmd: /usr/local/bin/brew --version
+      register: brew_version
+
+    - name: Print Homebrew version
+      debug:
+        msg: "Homebrew version: {{ brew_version.stdout }}"
+  when: installPackageManager | default(true)
+
+- name: install git
+  block:
+    - name: Install git
+      community.general.homebrew:
+        name: git
+        state: present
+    
+    - name: Verify git
+      ansible.builtin.shell:
+        cmd: git --version
+      register: git_version
+    
+    - name: Print git version
+      debug:
+        msg: "Git version: {{ git_version }}"
+  when: installGit | default(true)

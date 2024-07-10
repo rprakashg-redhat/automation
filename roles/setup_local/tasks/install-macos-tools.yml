@@ -17,11 +17,13 @@
           {% endif %}
 
     - name: Install if return code not equal to 0
-      command: softwareupdate --install -a
+      ansible.builtin.shell:
+        cmd: softwareupdate --install -a
       when: xcode_select_output.rc != 0
 
     - name: Accept Xcode license agreement
-      command: xcodebuild -license accept
+      ansible.builtin.shell:
+        cmd: xcodebuild -license accept
       when: xcode_select_output.rc != 0
 
     - name: Ensure Homebrew is installed

@@ -1,3 +1,10 @@
 ---
+
+### Defaults for configuring local environment
 installPackageManager: true
-installGit: true
+
+
+### Defaults for installing openshift tools locally
+installOpenshiftTools: true
+binDir: /usr/local/bin
+mirrorUrl: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest

@@ -2,3 +2,7 @@
 - name: install tools for macos
   ansible.builtin.import_tasks: install-macos-tools.yml
   when: ansible_facts['os_family'] == 'Darwin'
+
+- name: install openshift tools
+  ansible.builtin.import_tasks: install-openshift-tools.yml
+  when: installOpenshiftTools | default(true)

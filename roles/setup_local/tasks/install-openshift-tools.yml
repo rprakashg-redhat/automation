@@ -1,0 +1,29 @@
+- name: install openshift tools
+  become: true
+  block:
+    - name: Check if bin path dir exists
+      ansible.builtin.stat:
+        path: "{{ binDir }}"
+      register: bin_stat
+
+    - name: Create bin path dir if doesnt exist
+      ansible.builtin.file:
+        path: "{{ binDir }}"
+        state: directory
+        mode: '0755'
+      when: not bin_stat.stat.exists
+    
+    - name: set download file based on target platform
+      set_fact:
+        binary: >
+          {% elif ansible_facts['os_family'] == 'RedHat' %}
+            openshift-install-linux.tar.gz
+          {% else %}
+            openshift-install-mac.tar.gz
+          {% endif %}
+    
+    - name: download binary
+      ansible.builtin.get_url:
+        url: "{{ mirrorUrl }}/{{ binary }}"
+        dest: "{{ binDir }}/{{ binary }}"
+        mode: '0755'

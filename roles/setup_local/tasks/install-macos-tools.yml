@@ -1,4 +1,4 @@
-- name: install homebrew
+- name: Install homebrew
   become: true
   block:
     - name: verify xcode installed
@@ -36,23 +36,70 @@
       register: brew_version
 
     - name: Print Homebrew version
-      debug:
+      ansible.builtin.debug:
         msg: "Homebrew version: {{ brew_version.stdout }}"
   when: installPackageManager | default(true)
 
-- name: install git
+- name: Install tools
+  community.general.homebrew:
+    name: git, awscli, jq, yq, wget
+    state: present
+
+- name: Install podman
   block:
-    - name: Install git
+    - name: Check if Podman is installed
+      command: podman --version
+      register: podman_version
+      ignore_errors: yes      
+
+    - name: install podman
       community.general.homebrew:
-        name: git
+        name: podman
         state: present
-    
-    - name: Verify git
+      when: podman_version.rc != 0
+
+    - name: Get podman system info
       ansible.builtin.shell:
-        cmd: git --version
-      register: git_version
+        cmd: podman system info
+      register: podman_system_info
+      ignore_errors: yes
+
+    - name: Get podman machine list
+      ansible.builtin.shell:
+        cmd: podman machine list --format json
+      register: podman_machine_list
+      when: podman_version.rc == 0  
     
-    - name: Print git version
+    - name: Parse Podman machine list
+      set_fact:
+        podman_machines: "{{ podman_machine_list.stdout | from_json }}"
+      when: podman_machine_list.rc == 0
+
+    - name: check if a machine is initialized
+      set_fact:
+        podman_machine_initialized: "{{ podman_machines | selectattr('Name', 'defined') | list | length > 0 }}"
+      
+    - name: initialize or start podman
       debug:
-        msg: "Git version: {{ git_version }}"
-  when: installGit | default(true)
+        var: podman_machine_initialized
+    
+    - name: initialize podman
+      ansible.builtin.shell:
+        cmd: podman machine init
+      when: not podman_machine_initialized
+
+    - name: Get machines list
+      ansible.builtin.shell:
+        cmd: podman machine list --format json
+      register: list_machines_status
+    
+    - name: Parse Podman machine list
+      set_fact:
+        podman_machines: "{{ list_machines_status.stdout | from_json }}"
+      when: podman_machine_list.rc == 0
+
+    - name: start machine if its not running
+      ansible.builtin.shell:
+        cmd: podman machine start
+      when: not podman_machines[0].Running
+    

@@ -25,5 +25,5 @@
     - name: download binary
       ansible.builtin.get_url:
         url: "{{ mirrorUrl }}/{{ binary }}"
-        dest: "{{ binDir }}/{{ binary }}"
+        dest: "{{ binDir }}/openshift-install"
         mode: '0755'

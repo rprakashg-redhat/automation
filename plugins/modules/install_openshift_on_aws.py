@@ -5,11 +5,11 @@
 
 DOCUMENTATION = r'''
 ---
-module:
+module: install openshift on aws
 
-short_description:
+short_description: Install Openshift on AWS
 
-description:
+description: Install Openshift container platform on AWS
 
 author:
     - Ram Gopinathan (@rprakashg)
@@ -28,10 +28,23 @@ EXAMPLES = r'''
 RETURN = r'''
 
 '''
-
+import boto3
 import yaml # type: ignore
 from ansible.module_utils.basic import AnsibleModule  # noqa E402
 from jinja2 import Environment, FileSystemLoader
+from itertools import islice
+
+def get_azs(region, replicas):
+    take: int
+    if replicas > 3:
+        take = 3
+    else:
+        take = replicas
+    client = boto3.client('ec2', region_name=region)
+    response = client.describe_availability_zones()
+    azs = [az['ZoneName'] for az in response['AvailabilityZones']]
+    return dict(islice(azs, take))
+    
 
 def generate_installconfig(params):
     dest_file = params['dest_file']

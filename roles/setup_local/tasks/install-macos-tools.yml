@@ -45,14 +45,14 @@
     name: git, awscli, jq, yq, wget
     state: present
 
-- name: Install podman
+- name: Install and configure podman
   block:
     - name: Check if Podman is installed
       command: podman --version
       register: podman_version
       ignore_errors: yes      
 
-    - name: install podman
+    - name: install it
       community.general.homebrew:
         name: podman
         state: present
@@ -78,10 +78,6 @@
     - name: check if a machine is initialized
       set_fact:
         podman_machine_initialized: "{{ podman_machines | selectattr('Name', 'defined') | list | length > 0 }}"
-      
-    - name: initialize or start podman
-      debug:
-        var: podman_machine_initialized
     
     - name: initialize podman
       ansible.builtin.shell:

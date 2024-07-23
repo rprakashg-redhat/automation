@@ -7,7 +7,7 @@ compute:
   platform:
     aws:
       zones:
-      {% for az in azs %}
+      {% for az in worker_azs %}
       - {{ az }}
       {% endfor %}
       rootVolume:
@@ -23,7 +23,7 @@ controlPlane:
   platform:
     aws:
       zones:
-      {% for az in azs %}
+      {% for az in controlplane_azs %}
       - {{ az }}
       {% endfor %}
       rootVolume:
@@ -45,7 +45,7 @@ networking:
   - 172.30.0.0/16
 platform:
   aws:
-    region: {{ aws_region }}
+    region: {{ region }}
 publish: External
 pullSecret: '{{ pullsecret }}'
 sshKey: |

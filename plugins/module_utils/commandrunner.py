@@ -3,7 +3,7 @@ from commandresult import CommandResult
 
 class CommandRunner(object):
     """
-        Command:
+        CommandRunner
 
         This is a helper utility for running commandline binaries
     """
@@ -11,6 +11,15 @@ class CommandRunner(object):
         self.binary = binary
 
     def run(self, command, subcommand, args) -> CommandResult:
+        """
+        Run command with subcommand and args in an executable binary
+
+        :command: Command to execute
+        :subcommand: Sub command to execute
+        :args: Array of command line arguments for the sub command being executed
+
+        :return: CommandResult
+        """
         run_command = [self.binary] + [command] + [subcommand] + args
 
         try:

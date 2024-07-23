@@ -9,7 +9,7 @@ ANSIBLE_METADATA = {
     "supported_by": "Community"
 }
 
-DOCUMENTATION = r'''
+DOCUMENTATION = """
 ---
 module: install openshift on aws
 
@@ -56,16 +56,24 @@ options:
         required: true
 notes:
 
-'''
+"""
 
-EXAMPLES = r'''
----
-- name: 
-'''
+EXAMPLES = """
+- name: install openshift on aws
+  rprakashg.automation.install_openshift_on_aws:
+    cluster_name: hub
+    region: us-west-2
+    base_domain: ocp.example.com
+    worker_instance_type: m5.4xlarge
+    worker_replicas: 3
+    master_instance_type: c5.4xlarge
+    master_replicas: 3
+    
+"""
 
-RETURN = r'''
+RETURN = """
 
-'''
+"""
 import boto3
 import yaml # type: ignore
 import os

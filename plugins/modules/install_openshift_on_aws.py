@@ -2,6 +2,9 @@
 
 # Copyright: (c) 2024, Ram Gopinathan <rprakashg@gmail.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
 
 ANSIBLE_METADATA = {
     "metadata_version": "0.1",
@@ -9,14 +12,14 @@ ANSIBLE_METADATA = {
     "supported_by": "Community"
 }
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 ---
 module: install openshift on aws
 
-short_description: Install Openshift on AWS
+short_description: Install Openshift cluster on AWS
 
 description: 
-    - Install Openshift container platform on AWS
+    - Install Openshift container platform cluster on AWS
 
 author:
     - Ram Gopinathan (@rprakashg)
@@ -54,11 +57,11 @@ options:
         type: int
         default: 3
         required: true
-notes:
+notes: []
 
-"""
+'''
 
-EXAMPLES = """
+EXAMPLES = r'''
 - name: install openshift on aws
   rprakashg.automation.install_openshift_on_aws:
     cluster_name: hub
@@ -68,14 +71,10 @@ EXAMPLES = """
     worker_replicas: 3
     master_instance_type: c5.4xlarge
     master_replicas: 3
-    
-"""
+'''
 
-RETURN = """
-
-"""
 import boto3
-import yaml # type: ignore
+import yaml 
 import os
 import re
 import base64 
@@ -142,12 +141,7 @@ def generate_installconfig(params, secrets, install_config_file):
     with open(install_config_file, 'w') as f:
         f.write(rendered_content)
 
-    return True, None
-
-def run_installer():
-    openshift_installer_binary = "openshift-install"
-    
-    return None
+    return True
 
 def download_pullsecret(rh_offline_token):
     token_endpoint: str = "https://sso.redhat.com/auth/realms/redirect-external/protocol/openid-connect/token"

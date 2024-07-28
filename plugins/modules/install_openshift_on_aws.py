@@ -86,8 +86,9 @@ from ansible.parsing.vault import VaultLib, VaultSecret
 from ansible.constants import DEFAULT_VAULT_ID_MATCH
 from jinja2 import Environment, FileSystemLoader
 from itertools import islice
-from ansible_collections.rprakashg.automation.plugins.module_utils.commandrunner import CommandRunner
-from ansible_collections.rprakashg.automation.plugins.module_utils.commandresult import CommandResult
+
+from module_utils.commandrunner import CommandRunner
+from module_utils.commandresult import CommandResult
 
 def read_vault_file(vault_file, vault_password):
     vault_secret = VaultSecret(base64.b64encode(vault_password.encode('utf-8')))
@@ -197,12 +198,12 @@ def install_openshift(module, runner):
             password = dict(type=str)
         ),
         kubeconfig = dict(type=str),
-        output = dict(type=str),
+        output = dict(type=str)
     )
 
     error_payload = dict(
-        changed = dict(type=bool, required=True)
-        error_msg = dict(type=str, required=True),
+        changed = dict(type=bool, required=True),
+        error_msg = dict(type=str, required=True)
     )
 
     # Check if AWS credentials are set in environment variables

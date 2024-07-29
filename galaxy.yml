@@ -69,6 +69,8 @@ build_ignore:
   - "Makefile"
   - "sonarqube.sh"
   - ".venv"
+  - "dist"
+  - "tests"
 
 # A dict controlling use of manifest directives used in building the collection artifact. The key 'directives' is a
 # list of MANIFEST.in style

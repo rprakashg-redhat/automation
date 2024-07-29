@@ -7,6 +7,5 @@ Plugins included in this Ansible collection are listed below:
 
 ```
 └── plugins
-    ├── install_openshift_on_aws
+    ├── {list plugins here}
 ```
-
